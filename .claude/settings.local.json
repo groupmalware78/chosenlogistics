@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Read(//Users/deevexx/.nvm/versions/**)",
+      "Read(//Users/deevexx/.volta/**)",
+      "Read(//Users/deevexx/**)",
+      "Bash(which brew *)",
+      "Read(//opt/homebrew/lib/**)",
+      "Bash(command -v node)",
+      "Bash(command -v nvm)",
+      "Bash(zsh -l -c \"which node 2>/dev/null\")",
+      "Bash(ls /opt/ 2>/dev/null; ls /usr/local/ 2>/dev/null | head -20)",
+      "Bash(chmod +x /Users/deevexx/Downloads/Projects/SLP_Tracker/setup.sh /Users/deevexx/Downloads/Projects/SLP_Tracker/start.sh)",
+      "WebFetch(domain:127.0.0.1)",
+      "Bash(curl -s http://127.0.0.1:4040/api/tunnels)"
+    ]
+  }
+}

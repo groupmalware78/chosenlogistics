@@ -1,0 +1,11 @@
+{
+  "name": "slp-tracker",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm ci --prefix frontend && npm run build --prefix frontend && npm ci --prefix backend && cd backend && npx prisma generate",
+    "start": "cd backend && npx prisma db push && node src/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -4,6 +4,12 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
+  const existingUsers = await prisma.user.count();
+  if (existingUsers > 0) {
+    console.log('Database already seeded, skipping.');
+    return;
+  }
+
   console.log('Seeding database...');
 
   const adminHash = await bcrypt.hash('admin123', 10);
@@ -21,7 +27,6 @@ async function main() {
     create: { username: 'operator1', password: operatorHash, role: 'OPERATOR' },
   });
 
-  const statuses = ['In Transit', 'Delivered', 'Pending', 'Exception'];
   const records = [
     { trackingNumber: 'TRK001234567', status: 'Delivered', userId: admin.id, scannedBy: 'admin', scanTime: new Date(Date.now() - 3600000 * 5) },
     { trackingNumber: 'TRK001234568', status: 'In Transit', userId: operator.id, scannedBy: 'operator1', scanTime: new Date(Date.now() - 3600000 * 4) },

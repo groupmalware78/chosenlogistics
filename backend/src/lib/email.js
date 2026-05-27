@@ -1,13 +1,7 @@
 const dns = require('dns');
 const nodemailer = require('nodemailer');
 
-dns.setDefaultResultOrder("ipv4first");
-
 function createTransport() {
-
-console.log('port', process.env.SMTP_PORT);
-
-console.log('host', process.env.SMTP_HOST)
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || '587'),
@@ -15,6 +9,9 @@ console.log('host', process.env.SMTP_HOST)
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
+    },
+    lookup: (hostname, options, callback) => {
+      dns.lookup(hostname, { ...options, family: 4 }, callback);
     },
   });
 }

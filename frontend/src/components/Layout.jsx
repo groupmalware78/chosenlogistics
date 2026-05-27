@@ -51,10 +51,10 @@ export default function Layout() {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 text-sm">
                 <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center font-semibold">
-                  {user?.username?.[0]?.toUpperCase()}
+                  {user?.email?.[0]?.toUpperCase()}
                 </div>
                 <div className="hidden sm:block">
-                  <p className="font-medium">{user?.username}</p>
+                  <p className="font-medium">{user?.email}</p>
                   <p className="text-blue-200 text-xs">{user?.role}</p>
                 </div>
               </div>

@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 export default function Login() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ username: '', password: '' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,8 +16,8 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      await login(form.username, form.password);
-      navigate('/');
+      const loggedIn = await login(form.email, form.password);
+      navigate(loggedIn.mustChangePassword ? '/change-password' : '/');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Please try again.');
     } finally {
@@ -52,14 +52,14 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="label" htmlFor="username">Username</label>
+              <label className="label" htmlFor="email">Email</label>
               <input
-                id="username"
-                type="text"
+                id="email"
+                type="email"
                 className="input"
-                placeholder="Enter your username"
-                value={form.username}
-                onChange={e => setForm(p => ({ ...p, username: e.target.value }))}
+                placeholder="Enter your email"
+                value={form.email}
+                onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
                 autoFocus
                 required
               />
@@ -92,10 +92,6 @@ export default function Login() {
               ) : 'Sign In'}
             </button>
           </form>
-
-          {/* <p className="mt-6 text-xs text-gray-400 text-center">
-            Default: admin / admin123 &nbsp;|&nbsp; operator1 / operator123
-          </p> */}
         </div>
       </div>
     </div>

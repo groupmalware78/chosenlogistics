@@ -13,36 +13,36 @@ async function main() {
   console.log('Seeding database...');
 
   const adminHash = await bcrypt.hash('admin123', 10);
-  const operatorHash = await bcrypt.hash('operator123', 10);
+  //const operatorHash = await bcrypt.hash('operator123', 10);
 
   const admin = await prisma.user.upsert({
-    where: { username: 'admin' },
+    where: { email: 'groupmalware78@gmail.com' },
     update: {},
-    create: { username: 'admin', password: adminHash, role: 'ADMIN' },
+    create: { email: 'groupmalware78@gmail.com', password: adminHash, role: 'ADMIN', mustChangePassword: true },
   });
 
-  const operator = await prisma.user.upsert({
-    where: { username: 'operator1' },
-    update: {},
-    create: { username: 'operator1', password: operatorHash, role: 'OPERATOR' },
-  });
+  // const operator = await prisma.user.upsert({
+  //   where: { email: 'operator1@company.com' },
+  //   update: {},
+  //   create: { email: 'operator1@company.com', password: operatorHash, role: 'OPERATOR', mustChangePassword: false },
+  // });
 
-  const records = [
-    { trackingNumber: 'TRK001234567', status: 'Delivered', userId: admin.id, scannedBy: 'admin', scanTime: new Date(Date.now() - 3600000 * 5) },
-    { trackingNumber: 'TRK001234568', status: 'In Transit', userId: operator.id, scannedBy: 'operator1', scanTime: new Date(Date.now() - 3600000 * 4) },
-    { trackingNumber: 'TRK001234569', status: 'Pending', userId: operator.id, scannedBy: 'operator1', scanTime: new Date(Date.now() - 3600000 * 3) },
-    { trackingNumber: 'TRK001234570', status: 'Exception', userId: admin.id, scannedBy: 'admin', scanTime: new Date(Date.now() - 3600000 * 2) },
-    { trackingNumber: 'TRK001234571', status: 'Delivered', userId: operator.id, scannedBy: 'operator1', scanTime: new Date(Date.now() - 3600000 * 1) },
-    { trackingNumber: 'TRK001234572', status: 'In Transit', userId: admin.id, scannedBy: 'admin', scanTime: new Date() },
-  ];
+  // const records = [
+  //   { trackingNumber: 'TRK001234567', status: 'Delivered', userId: admin.id, scannedBy: admin.email, scanTime: new Date(Date.now() - 3600000 * 5) },
+  //   { trackingNumber: 'TRK001234568', status: 'In Transit', userId: operator.id, scannedBy: operator.email, scanTime: new Date(Date.now() - 3600000 * 4) },
+  //   { trackingNumber: 'TRK001234569', status: 'Received', userId: operator.id, scannedBy: operator.email, scanTime: new Date(Date.now() - 3600000 * 3) },
+  //   { trackingNumber: 'TRK001234570', status: 'Exception', userId: admin.id, scannedBy: admin.email, scanTime: new Date(Date.now() - 3600000 * 2) },
+  //   { trackingNumber: 'TRK001234571', status: 'Delivered', userId: operator.id, scannedBy: operator.email, scanTime: new Date(Date.now() - 3600000 * 1) },
+  //   { trackingNumber: 'TRK001234572', status: 'In Transit', userId: admin.id, scannedBy: admin.email, scanTime: new Date() },
+  // ];
 
-  for (const rec of records) {
-    await prisma.scanRecord.create({ data: rec });
-  }
+  // for (const rec of records) {
+  //   await prisma.scanRecord.create({ data: rec });
+  // }
 
   console.log('Seed complete!');
-  console.log('  Admin:     username=admin     password=admin123');
-  console.log('  Operator:  username=operator1 password=operator123');
+  //console.log('  Admin:    email=admin@company.com    password=admin123');
+  //console.log('  Operator: email=operator1@company.com password=operator123');
 }
 
 main()

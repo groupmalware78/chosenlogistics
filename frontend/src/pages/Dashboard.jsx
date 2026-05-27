@@ -155,9 +155,11 @@ export default function Dashboard() {
           </button>
 
           <div className="flex gap-2 ml-auto">
-            <button className="btn-secondary btn-sm h-9" onClick={handleExport} title="Export CSV">
-              <DownloadIcon className="w-4 h-4" /> Export
-            </button>
+            {user.role === 'ADMIN' && (
+              <button className="btn-secondary btn-sm h-9" onClick={handleExport} title="Export CSV">
+                <DownloadIcon className="w-4 h-4" /> Export
+              </button>
+            )}
             <button className="btn-primary btn-sm h-9" onClick={() => setShowAdd(true)}>
               <PlusIcon className="w-4 h-4" /> Add Scan
             </button>

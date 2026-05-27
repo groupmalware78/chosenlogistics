@@ -83,7 +83,7 @@ export default function AddScanModal({ onClose, onSuccess }) {
 
         <div>
           <label className="label">Scanned By</label>
-          <input type="text" className="input bg-gray-50 text-gray-500" value={user.username} disabled />
+          <input type="text" className="input bg-gray-50 text-gray-500" value={user.email} disabled />
         </div>
 
         <div className="flex gap-3 pt-2">

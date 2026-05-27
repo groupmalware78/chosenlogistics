@@ -93,9 +93,9 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="mt-6 text-xs text-gray-400 text-center">
+          {/* <p className="mt-6 text-xs text-gray-400 text-center">
             Default: admin / admin123 &nbsp;|&nbsp; operator1 / operator123
-          </p>
+          </p> */}
         </div>
       </div>
     </div>

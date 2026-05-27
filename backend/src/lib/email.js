@@ -1,48 +1,16 @@
-const dns = require('dns');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-function resolveIPv4(hostname) {
-  return new Promise((resolve, reject) => {
-    dns.resolve4(hostname, (err, addresses) => {
-      if (err) reject(err);
-      else resolve(addresses[0]);
-    });
-  });
-}
-
-async function createTransport() {
-  const hostname = process.env.SMTP_HOST;
-  let host = hostname;
-  try {
-    host = await resolveIPv4(hostname);
-    console.log(`[SMTP] Resolved ${hostname} → ${host} (IPv4)`);
-  } catch (e) {
-    console.log(`[SMTP] IPv4 resolve failed, using hostname: ${e.message}`);
-  }
-  console.log(`[SMTP] host=${host} port=465 user=${process.env.SMTP_USER}`);
-  return nodemailer.createTransport({
-    host,
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendWelcomeEmail({ email, tempPassword }) {
-  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.log(`[Email skipped – SMTP not configured] Credentials for ${email}: ${tempPassword}`);
+  if (!process.env.RESEND_API_KEY) {
+    console.log(`[Email skipped – no RESEND_API_KEY] Credentials for ${email}: ${tempPassword}`);
     return;
   }
 
   try {
-    const transporter = await createTransport();
-    await transporter.verify();
-    console.log("SMTP Ready!!!");
-    await transporter.sendMail({
-      from: process.env.FROM_EMAIL || process.env.SMTP_USER,
+    const { error } = await resend.emails.send({
+      from: process.env.FROM_EMAIL || 'onboarding@resend.dev',
       to: email,
       subject: 'Your Chosen Logistics Tracker Account',
       html: `
@@ -57,6 +25,8 @@ async function sendWelcomeEmail({ email, tempPassword }) {
         </div>
       `,
     });
+    if (error) console.error(`[Email failed] Resend error for ${email}:`, error.message);
+    else console.log(`[Email sent] Welcome email delivered to ${email}`);
   } catch (err) {
     console.error(`[Email failed] Could not send to ${email}:`, err.message);
   }

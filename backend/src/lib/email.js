@@ -1,19 +1,32 @@
 const dns = require('dns');
 const nodemailer = require('nodemailer');
 
-function createTransport() {
-  const port = parseInt(process.env.SMTP_PORT || '465');
-  console.log(`[SMTP] host=${process.env.SMTP_HOST} port=${port} user=${process.env.SMTP_USER}`);
+function resolveIPv4(hostname) {
+  return new Promise((resolve, reject) => {
+    dns.resolve4(hostname, (err, addresses) => {
+      if (err) reject(err);
+      else resolve(addresses[0]);
+    });
+  });
+}
+
+async function createTransport() {
+  const hostname = process.env.SMTP_HOST;
+  let host = hostname;
+  try {
+    host = await resolveIPv4(hostname);
+    console.log(`[SMTP] Resolved ${hostname} → ${host} (IPv4)`);
+  } catch (e) {
+    console.log(`[SMTP] IPv4 resolve failed, using hostname: ${e.message}`);
+  }
+  console.log(`[SMTP] host=${host} port=465 user=${process.env.SMTP_USER}`);
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port,
-    secure: port === 465,
+    host,
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
-    },
-    lookup: (hostname, options, callback) => {
-      dns.lookup(hostname, { ...options, family: 4 }, callback);
     },
   });
 }
@@ -25,7 +38,7 @@ async function sendWelcomeEmail({ email, tempPassword }) {
   }
 
   try {
-    const transporter = createTransport();
+    const transporter = await createTransport();
     await transporter.verify();
     console.log("SMTP Ready!!!");
     await transporter.sendMail({

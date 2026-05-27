@@ -1,11 +1,17 @@
+import dns from "dns";
 const nodemailer = require('nodemailer');
 
+dns.setDefaultResultOrder("ipv4first");
+
 function createTransport() {
+
+console.log('port', process.env.SMTP_PORT);
+
+console.log('host', process.env.SMTP_HOST)
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || '587'),
     secure: process.env.SMTP_PORT === '465',
-    family: 4,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
@@ -21,6 +27,8 @@ async function sendWelcomeEmail({ email, tempPassword }) {
 
   try {
     const transporter = createTransport();
+    await transporter.verify();
+    console.log("SMTP Ready!!!");
     await transporter.sendMail({
       from: process.env.FROM_EMAIL || process.env.SMTP_USER,
       to: email,

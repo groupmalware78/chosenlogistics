@@ -5,7 +5,7 @@ import api from '../api';
 
 export default function AddScanModal({ onClose, onSuccess }) {
   const { user } = useAuth();
-  const [form, setForm] = useState({ trackingNumber: '', status: 'Pending', scanTime: '' });
+  const [form, setForm] = useState({ trackingNumber: '', status: 'Received', scanTime: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);

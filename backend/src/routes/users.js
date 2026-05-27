@@ -38,9 +38,9 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
       select: { id: true, email: true, role: true, mustChangePassword: true, createdAt: true },
     });
 
-    await sendWelcomeEmail({ email: user.email, tempPassword });
-
     res.status(201).json(user);
+
+    sendWelcomeEmail({ email: user.email, tempPassword });
   } catch (err) {
     if (err.code === 'P2002') {
       return res.status(409).json({ error: 'Email already exists' });

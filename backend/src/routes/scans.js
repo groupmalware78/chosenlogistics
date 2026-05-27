@@ -39,7 +39,7 @@ router.get('/', authenticate, async (req, res) => {
         orderBy: { scanTime: sort === 'asc' ? 'asc' : 'desc' },
         skip: (pageNum - 1) * limitNum,
         take: limitNum,
-        include: { user: { select: { username: true, role: true } } },
+        include: { user: { select: { email: true, role: true } } },
       }),
       prisma.scanRecord.count({ where }),
     ]);
@@ -70,7 +70,7 @@ router.get('/export', authenticate, requireAdmin, async (req, res) => {
     const records = await prisma.scanRecord.findMany({
       where,
       orderBy: { scanTime: 'desc' },
-      include: { user: { select: { username: true } } },
+      include: { user: { select: { email: true } } },
     });
 
     const flat = records.map(r => ({

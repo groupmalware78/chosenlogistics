@@ -16,7 +16,8 @@ async function sendWelcomeEmail({ email, tempPassword }) {
       html: `
         <div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#222;">
           <h2 style="color:#1d4ed8;">Chosen Logistics Tracker</h2>
-          <p>Your account has been created. Use the credentials below to sign in.</p>
+          <p>Your account has been created. Use the credentials below to sign in </p>
+          <p>at <a href="https://chosenlogistics-production.up.railway.app/login">Chosen Logistics</a></p>
           <div style="background:#f1f5f9;border-radius:8px;padding:16px 20px;margin:20px 0;">
             <p style="margin:4px 0;"><strong>Email:</strong> ${email}</p>
             <p style="margin:4px 0;"><strong>Temporary Password:</strong> <code style="background:#e2e8f0;padding:2px 6px;border-radius:4px;">${tempPassword}</code></p>

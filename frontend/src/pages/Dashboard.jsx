@@ -56,11 +56,21 @@ export default function Dashboard() {
   const setFilter = (key, value) =>
     setFilters(p => ({ ...p, [key]: value, ...(key !== 'page' ? { page: 1 } : {}) }));
 
-  const handleExport = () => {
+  const handleExport = async () => {
     const params = new URLSearchParams(
       Object.fromEntries(Object.entries(filters).filter(([k, v]) => v !== '' && !['page', 'limit', 'sort'].includes(k)))
     );
-    window.open(`/api/scans/export?${params}`, '_blank');
+    try {
+      const { data } = await api.get(`/scans/export?${params}`, { responseType: 'blob' });
+      const url = URL.createObjectURL(new Blob([data], { type: 'text/csv' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'scan_records.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(err.response?.data?.error || 'Export failed');
+    }
   };
 
   const onAddSuccess = record => {

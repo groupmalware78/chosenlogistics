@@ -1,11 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../api';
+import { useIdleTimer } from '../hooks/useIdleTimer';
 
 const AuthContext = createContext(null);
+
+const IDLE_TIMEOUT_MS = 2 * 60 * 1000; // 15 minutes
+const WARNING_BEFORE_MS = 60 * 1000;    // show warning 1 minute before logout
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [idleWarning, setIdleWarning] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('slp_user');
@@ -30,7 +35,16 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('slp_token');
     localStorage.removeItem('slp_user');
     delete api.defaults.headers.common['Authorization'];
+    setIdleWarning(false);
     setUser(null);
+    // ProtectedRoute will redirect to /login once user is null
+  }, []);
+
+  // Called when the user clicks "Stay Logged In" in the warning modal.
+  // The act of clicking counts as activity, which resets the idle timer via the
+  // DOM event listener in useIdleTimer — so we only need to close the modal here.
+  const extendSession = useCallback(() => {
+    setIdleWarning(false);
   }, []);
 
   const updateUser = useCallback((updates) => {
@@ -41,8 +55,18 @@ export function AuthProvider({ children }) {
     });
   }, []);
 
+  // Only active while a user is logged in
+  useIdleTimer({
+    onWarning: () => setIdleWarning(true),
+    onIdle: logout,
+    onActivity: () => setIdleWarning(false),
+    enabled: !!user,
+    timeoutMs: IDLE_TIMEOUT_MS,
+    warningMs: WARNING_BEFORE_MS,
+  });
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, updateUser, idleWarning, extendSession }}>
       {children}
     </AuthContext.Provider>
   );

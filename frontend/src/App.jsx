@@ -7,6 +7,7 @@ import Users from './pages/Users';
 import Logs from './pages/Logs';
 import Layout from './components/Layout';
 import ChangePassword from './pages/ChangePassword';
+import IdleWarningModal from './components/IdleWarningModal';
 
 function ProtectedRoute({ children, adminOnly = false }) {
   const { user, loading } = useAuth();
@@ -31,6 +32,8 @@ function Spinner() {
 
 export default function App() {
   return (
+    <>
+    <IdleWarningModal />
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/change-password" element={
@@ -66,5 +69,6 @@ export default function App() {
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 }

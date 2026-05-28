@@ -4,7 +4,7 @@ import { useIdleTimer } from '../hooks/useIdleTimer';
 
 const AuthContext = createContext(null);
 
-const IDLE_TIMEOUT_MS = 2 * 60 * 1000; // 15 minutes
+const IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
 const WARNING_BEFORE_MS = 60 * 1000;    // show warning 1 minute before logout
 
 export function AuthProvider({ children }) {

@@ -121,7 +121,7 @@ router.post('/', authenticate, requireNotReadonly, async (req, res) => {
     const data = {
       trackingNumber: trackingNumber.trim(),
       status,
-      scannedBy: req.user.email,
+      scannedBy: req.user.username,
       userId: req.user.id,
     };
     if (req.user.role === 'ADMIN' && scanTime) {
@@ -129,7 +129,7 @@ router.post('/', authenticate, requireNotReadonly, async (req, res) => {
     }
 
     const record = await prisma.scanRecord.create({ data });
-    await logActivity(req.user.id, req.user.email, 'CREATE_SCAN', `Created scan #${record.id} for ${record.trackingNumber}`);
+    await logActivity(req.user.id, req.user.username, 'CREATE_SCAN', `Created scan #${record.id} for ${record.trackingNumber}`);
     res.status(201).json(record);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -153,7 +153,7 @@ router.put('/:id', authenticate, requireAdmin, async (req, res) => {
         ...(scanTime && { scanTime: new Date(scanTime) }),
       },
     });
-    await logActivity(req.user.id, req.user.email, 'EDIT_SCAN', `Edited scan #${id}`);
+    await logActivity(req.user.id, req.user.username, 'EDIT_SCAN', `Edited scan #${id}`);
     res.json(record);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -168,7 +168,7 @@ router.delete('/:id', authenticate, requireAdmin, async (req, res) => {
     if (!existing) return res.status(404).json({ error: 'Record not found' });
 
     await prisma.scanRecord.delete({ where: { id } });
-    await logActivity(req.user.id, req.user.email, 'DELETE_SCAN', `Deleted scan #${id} (${existing.trackingNumber})`);
+    await logActivity(req.user.id, req.user.username, 'DELETE_SCAN', `Deleted scan #${id} (${existing.trackingNumber})`);
     res.json({ message: 'Record deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });

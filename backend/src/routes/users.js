@@ -29,7 +29,7 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
       return res.status(400).json({ error: 'Valid email is required' });
     }
 
-    const userRole = ['ADMIN', 'OPERATOR'].includes(role) ? role : 'OPERATOR';
+    const userRole = ['ADMIN', 'OPERATOR', 'READONLY'].includes(role) ? role : 'OPERATOR';
     const tempPassword = crypto.randomBytes(6).toString('hex');
     const hash = await bcrypt.hash(tempPassword, 10);
 
@@ -59,7 +59,7 @@ router.put('/:id', authenticate, requireAdmin, async (req, res) => {
 
     const data = {};
     if (email?.trim() && isValidEmail(email)) data.email = email.trim().toLowerCase();
-    if (role && ['ADMIN', 'OPERATOR'].includes(role)) data.role = role;
+    if (role && ['ADMIN', 'OPERATOR', 'READONLY'].includes(role)) data.role = role;
     if (password) {
       if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
       data.password = await bcrypt.hash(password, 10);

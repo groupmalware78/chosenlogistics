@@ -1,6 +1,6 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const { authenticate, requireAdmin } = require('../middleware/auth');
+const { authenticate, requireAdmin, requireNotReadonly } = require('../middleware/auth');
 const { Parser } = require('json2csv');
 
 const router = express.Router();
@@ -112,7 +112,7 @@ router.get('/stats', authenticate, async (req, res) => {
 });
 
 // POST /api/scans — create
-router.post('/', authenticate, async (req, res) => {
+router.post('/', authenticate, requireNotReadonly, async (req, res) => {
   try {
     const { trackingNumber, status, scanTime } = req.body;
     if (!trackingNumber?.trim()) return res.status(400).json({ error: 'trackingNumber is required' });

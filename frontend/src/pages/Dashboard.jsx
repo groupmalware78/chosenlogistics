@@ -160,9 +160,11 @@ export default function Dashboard() {
                 <DownloadIcon className="w-4 h-4" /> Export
               </button>
             )}
-            <button className="btn-primary btn-sm h-9" onClick={() => setShowAdd(true)}>
-              <PlusIcon className="w-4 h-4" /> Add Scan
-            </button>
+            {user.role !== 'READONLY' && (
+              <button className="btn-primary btn-sm h-9" onClick={() => setShowAdd(true)}>
+                <PlusIcon className="w-4 h-4" /> Add Scan
+              </button>
+            )}
           </div>
         </div>
       </div>

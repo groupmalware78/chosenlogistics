@@ -73,7 +73,7 @@ export default function Users() {
                   {u.id === me.id && <span className="ml-2 badge bg-blue-100 text-blue-700">You</span>}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`badge ${u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600'}`}>
+                  <span className={`badge ${u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' : u.role === 'READONLY' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600'}`}>
                     {u.role}
                   </span>
                 </td>
@@ -154,6 +154,7 @@ function UserModal({ user, onClose, onSuccess }) {
           <label className="label">Role</label>
           <select className="input" value={form.role} onChange={e => setForm(p => ({ ...p, role: e.target.value }))}>
             <option value="OPERATOR">Operator</option>
+            <option value="READONLY">Read Only</option>
             <option value="ADMIN">Admin</option>
           </select>
         </div>

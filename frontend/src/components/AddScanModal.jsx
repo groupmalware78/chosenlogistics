@@ -27,7 +27,8 @@ export default function AddScanModal({ onClose, onSuccess }) {
       if (user.role === 'ADMIN' && form.scanTime) payload.scanTime = form.scanTime;
       const { data } = await api.post('/scans', payload);
       onSuccess(data);
-      onClose();
+      setForm({ trackingNumber: '', status: form.status, scanTime: '' });
+      inputRef.current?.focus();
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to add scan record');
     } finally {

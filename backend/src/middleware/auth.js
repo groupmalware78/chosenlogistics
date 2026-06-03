@@ -24,4 +24,11 @@ const requireAdmin = (req, res, next) => {
   next();
 };
 
-module.exports = { authenticate, requireAdmin, JWT_SECRET };
+const requireNotReadonly = (req, res, next) => {
+  if (req.user?.role === 'READONLY') {
+    return res.status(403).json({ error: 'Read-only access: action not permitted' });
+  }
+  next();
+};
+
+module.exports = { authenticate, requireAdmin, requireNotReadonly, JWT_SECRET };

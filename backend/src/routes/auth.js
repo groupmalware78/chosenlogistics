@@ -9,37 +9,39 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password required' });
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password required' });
   }
 
   try {
-    const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
+    const user = await prisma.user.findFirst({ where: { username: username.toLowerCase() } });
     if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, username: user.username, email: user.email, role: user.role },
       JWT_SECRET,
       { expiresIn: '8h' }
     );
 
     res.json({
       token,
-      user: { id: user.id, email: user.email, role: user.role, mustChangePassword: user.mustChangePassword },
+      user: { id: user.id, username: user.username, email: user.email, role: user.role, mustChangePassword: user.mustChangePassword },
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/;
+
 router.post('/change-password', authenticate, async (req, res) => {
   const { newPassword } = req.body;
-  if (!newPassword || newPassword.length < 6) {
-    return res.status(400).json({ error: 'Password must be at least 6 characters' });
+  if (!newPassword || !PASSWORD_REGEX.test(newPassword)) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters and include an uppercase letter, lowercase letter, number, and special character' });
   }
 
   try {

@@ -9,7 +9,10 @@ datasource db {
 
 model User {
   id                 Int          @id @default(autoincrement())
-  email              String       @unique
+  firstName          String?
+  lastName           String?
+  username           String?      @unique
+  email              String
   password           String
   role               String       @default("OPERATOR")
   mustChangePassword Boolean      @default(false)

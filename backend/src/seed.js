@@ -12,13 +12,21 @@ async function main() {
 
   console.log('Seeding database...');
 
-  const adminHash = await bcrypt.hash('admin123', 10);
+  const adminHash = await bcrypt.hash('Admin#123', 10);
   //const operatorHash = await bcrypt.hash('operator123', 10);
 
   const admin = await prisma.user.upsert({
-    where: { email: 'groupmalware78@gmail.com' },
+    where: { username: 'shawnaprince' },
     update: {},
-    create: { email: 'groupmalware78@gmail.com', password: adminHash, role: 'ADMIN', mustChangePassword: true },
+    create: {
+      firstName: 'Shawna',
+      lastName: 'Price',
+      username: 'shawnaprince',
+      email: 'groupmalware78@gmail.com',
+      password: adminHash,
+      role: 'ADMIN',
+      mustChangePassword: true,
+    },
   });
 
   // const operator = await prisma.user.upsert({

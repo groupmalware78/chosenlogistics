@@ -2,9 +2,9 @@ const { Resend } = require('resend');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-async function sendWelcomeEmail({ email, tempPassword }) {
+async function sendWelcomeEmail({ email, username, tempPassword }) {
   if (!process.env.RESEND_API_KEY) {
-    console.log(`[Email skipped – no RESEND_API_KEY] Credentials for ${email}: ${tempPassword}`);
+    console.log(`[Email skipped – no RESEND_API_KEY] Credentials for ${email}: ${username} / ${tempPassword}`);
     return;
   }
 
@@ -19,7 +19,7 @@ async function sendWelcomeEmail({ email, tempPassword }) {
           <p>Your account has been created. Use the credentials below to sign in </p>
           <p>at <a href="https://chosenlogistics-production.up.railway.app/login">Chosen Logistics</a></p>
           <div style="background:#f1f5f9;border-radius:8px;padding:16px 20px;margin:20px 0;">
-            <p style="margin:4px 0;"><strong>Email:</strong> ${email}</p>
+            <p style="margin:4px 0;"><strong>Username:</strong> <code style="background:#e2e8f0;padding:2px 6px;border-radius:4px;">${username}</code></p>
             <p style="margin:4px 0;"><strong>Temporary Password:</strong> <code style="background:#e2e8f0;padding:2px 6px;border-radius:4px;">${tempPassword}</code></p>
           </div>
           <p style="color:#dc2626;font-size:14px;">You will be required to change your password on first login.</p>

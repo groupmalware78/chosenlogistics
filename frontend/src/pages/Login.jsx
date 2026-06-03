@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 export default function Login() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +16,7 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      const loggedIn = await login(form.email, form.password);
+      const loggedIn = await login(form.username, form.password);
       navigate(loggedIn.mustChangePassword ? '/change-password' : '/');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Please try again.');
@@ -52,14 +52,14 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="label" htmlFor="email">Email</label>
+              <label className="label" htmlFor="username">Username</label>
               <input
-                id="email"
-                type="email"
+                id="username"
+                type="text"
                 className="input"
-                placeholder="Enter your email"
-                value={form.email}
-                onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
+                placeholder="Enter your username"
+                value={form.username}
+                onChange={e => setForm(p => ({ ...p, username: e.target.value }))}
                 autoFocus
                 required
               />

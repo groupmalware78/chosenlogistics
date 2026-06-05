@@ -7,7 +7,9 @@
     "dev": "nodemon src/index.js",
     "db:push": "npx prisma db push",
     "db:seed": "node src/seed.js",
-    "db:studio": "npx prisma studio"
+    "db:studio": "npx prisma studio",
+    "migrate:export": "node src/migrate-export.js",
+    "migrate:import": "node src/migrate-import.js"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",
@@ -20,6 +22,7 @@
     "resend": "^6.12.4"
   },
   "devDependencies": {
+    "better-sqlite3": "^12.10.0",
     "nodemon": "^3.0.2",
     "prisma": "^5.7.0"
   }

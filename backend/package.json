@@ -7,7 +7,9 @@
     "dev": "nodemon src/index.js",
     "db:push": "npx prisma db push",
     "db:seed": "node src/seed.js",
-    "db:studio": "npx prisma studio"
+    "db:studio": "npx prisma studio",
+    "migrate:export": "node src/migrate-export.js",
+    "migrate:import": "node src/migrate-import.js"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",

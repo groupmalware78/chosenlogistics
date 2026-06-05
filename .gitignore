@@ -2,4 +2,3 @@ node_modules/
 .env
 *.db
 frontend/dist/
-backup.json

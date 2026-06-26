@@ -296,7 +296,10 @@ function StatCard({ label, value, color, icon }) {
 }
 
 function statusIcon(s) {
-  return { 'In Transit': '🚚', 'Delivered': '✅', 'Pending': '⏳', 'Exception': '⚠️' }[s] || '📦';
+  return {
+    'In Transit': '🚚', 'Delivered': '✅', 'Pending': '⏳', 'Exception': '⚠️',
+    'Damaged': '💥', 'Returned to Sender': '↩️', 'Opened': '📭', 'Empty': '🗳️', 'Liquid': '💧',
+  }[s] || '📦';
 }
 
 function PlusIcon({ className }) {

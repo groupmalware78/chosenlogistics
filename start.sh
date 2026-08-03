@@ -8,6 +8,25 @@ if ! command -v node &>/dev/null; then
   exit 1
 fi
 
+if [ ! -f "$ROOT/backend/.env.local" ]; then
+  echo "ERROR: backend/.env.local not found. Run setup.sh first."
+  exit 1
+fi
+
+set -a
+source "$ROOT/backend/.env.local"
+set +a
+
+# Ensure local Postgres is up
+cd "$ROOT" && docker compose up -d postgres >/dev/null
+echo -n "Waiting for Postgres to be ready"
+until [ "$(docker inspect -f '{{.State.Health.Status}}' chosen-logistics-postgres 2>/dev/null)" = "healthy" ]; do
+  echo -n "."
+  sleep 1
+done
+echo " ready"
+echo ""
+
 # Regenerate Prisma client if needed
 cd "$ROOT/backend" && npx prisma generate --quiet 2>/dev/null || true
 

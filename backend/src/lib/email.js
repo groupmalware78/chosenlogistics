@@ -1,12 +1,12 @@
 const { Resend } = require('resend');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 async function sendWelcomeEmail({ email, username, tempPassword }) {
   if (!process.env.RESEND_API_KEY) {
     console.log(`[Email skipped – no RESEND_API_KEY] Credentials for ${email}: ${username} / ${tempPassword}`);
     return;
   }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
     const { error } = await resend.emails.send({

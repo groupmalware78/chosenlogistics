@@ -18,7 +18,7 @@ router.get('/', authenticate, async (req, res) => {
     const { trackingNumber, status, startDate, endDate, page = 1, limit = 20, sort = 'desc' } = req.query;
 
     const where = {};
-    if (trackingNumber) where.trackingNumber = { contains: trackingNumber };
+    if (trackingNumber) where.trackingNumber = { contains: trackingNumber, mode: 'insensitive' };
     if (status) where.status = status;
     if (startDate || endDate) {
       where.scanTime = {};
@@ -56,7 +56,7 @@ router.get('/export', authenticate, requireAdmin, async (req, res) => {
     const { trackingNumber, status, startDate, endDate } = req.query;
 
     const where = {};
-    if (trackingNumber) where.trackingNumber = { contains: trackingNumber };
+    if (trackingNumber) where.trackingNumber = { contains: trackingNumber, mode: 'insensitive' };
     if (status) where.status = status;
     if (startDate || endDate) {
       where.scanTime = {};
